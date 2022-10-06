@@ -17,7 +17,7 @@ use Parallel::ForkManager;
 #
 # Global environment variables
 # Mopac
-my $path_bin_mopac      = "/opt/mopac/MOPAC2016.exe";
+my $path_bin_mopac      = "/opt/mopac/bin/mopac";
 # Lammps
 my $path_bin_lammps     = "mpirun -np 30 lmp_openmpi";
 # OpenBabel minimizador obminimize
@@ -171,18 +171,8 @@ my %Atomic_mass   = ( 'H'   => '1.0079'  ,'He' => '4.003'   ,'Li'  => '6.941'   
 # Logo
 sub logo {
 	print "\n";
-	print "        _____       _                  _   _   ___      _      \n";
-	print "       /  ___|     (_)                | | | | / (_)    | |     \n";
-	print "       \\ `--. _ __  _ _ __  _ __   ___| |_| |/ / _  ___| | __  \n";
-	print "        `--. \\ '_ \\| | '_ \\| '_ \\ / _ \\ __|    \\| |/ __| |/ /  \n";
-	print "       /\\__/ / | | | | |_) | |_) |  __/ |_| |\\  \\ | (__|   <   \n";
-	print "       \\____/|_| |_|_| .__/| .__/ \\___|\\__\\_| \\_/_|\\___|_|\\_\\  \n";
-	print "                     | |   | |                                 \n";
-	print "                     |_|   |_|                                 \n";
 	print "\n";
 	print "                 Stochastic Fragment Kick Search \n";
-	print "\n\n           Osvaldo Yanez-Osses & Omar Hernandez-Montes\n";
-	print "                     osvyanezosses\@gmail.com\n";
 	print "\n";
 	my $datestring = localtime();
 	print "                    $datestring\n\n";
@@ -265,7 +255,7 @@ sub MopacInput {
 	my $coordsMM     = $_[1];
 	my $MopacInput   = "$filebase.mop";
 	my $iteration    = $_[2];
-	my $Headerfile   = $_[3];
+	my $Headerfile   = $_[3]."DISP";
 	my $Charge       = $_[4];
 	my $Multiplicity = $_[5];
 	#
@@ -406,8 +396,8 @@ sub energy_mopac {
 		while (my $HLine = shift (@HeaderLines)) {
 			chomp ($HLine);
 			#
-			my $hatfield_1 = "TOTAL ENERGY";
-			if ( $HLine =~/$hatfield_1/ ){
+			
+			if ( $HLine =~/TOTAL\s*ENERGY\s*=\s*.[0-9]*\.[0-9]*\s*EV/ ){
 				$energy = $HLine;
 				my @words_1 = split (" ",$energy);
 				push (@energyy,$words_1[3]);
